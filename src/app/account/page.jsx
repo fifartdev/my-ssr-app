@@ -36,13 +36,13 @@ export default async function AccountPage() {
         <CardContent>
           <ul className="flex flex-col gap-6">
             <li>
-              <strong>Email:</strong> {user.email}
+              <strong>Email:</strong> {user?.email}
             </li>
             <li>
-              <strong>Name:</strong> {user.name}
+              <strong>Name:</strong> {user?.name}
             </li>
             <li>
-              <strong>ID: </strong> {user.$id}
+              <strong>ID: </strong> {user?.$id}
             </li>
           </ul>
           <CardFooter className="mt-8">
