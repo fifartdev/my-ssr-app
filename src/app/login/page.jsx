@@ -37,6 +37,8 @@ export default async function Login({ searchParams }) {
   const user = await getLoggedInUser();
   if (user) redirect("/account");
   const error = (await searchParams)?.error;
+  console.log("ENDPOINT IS: ", process.env.APPWRITE_ENDPOINT);
+
   return (
     <div className="flex flex-col justify-center items-center h-screen px-4">
       <form action={loginWithEmail} className="space-y-4 max-w-sm w-full">
