@@ -3,6 +3,9 @@ import { getLoggedInUser } from "./app/lib/appwrite";
 
 export async function middleware(request) {
   console.log("middleware ran");
+  console.log("ENDPOINT IS: ", process.env.APPWRITE_ENDPOINT);
+  console.log("PROJECT IS: ", process.env.APPWRITE_PROJECT);
+  console.log("API_KEY IS: ", process.env.APPWRITE_KEY);
 
   const url = new URL(request.url);
   const pathname = url.pathname;
