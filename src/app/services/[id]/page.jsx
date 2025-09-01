@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { ID } from "appwrite";
 import { tablesDB } from "@/app/lib/appwrite_client";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter, useParams } from "next/navigation";
 import {
   Select,
   SelectContent,
@@ -19,17 +19,17 @@ import {
   tableServicesId,
 } from "@/app/lib/constants";
 
-export default function NewServicePage() {
+export default function EditServicePage() {
   const router = useRouter();
-  const params = useSearchParams();
-  const id = params.get("id");
+  const params = useParams();
+  const { id } = params;
 
-  //Services Categories
+  // Services Categories
   const [categories, setCategories] = useState([]);
   const getCategories = async () => {
     try {
       const result = await tablesDB.listRows({
-        databaseId: databaseId,
+        databaseId,
         tableId: tableServiceCategoryId,
       });
       setCategories(result.rows);
@@ -40,8 +40,9 @@ export default function NewServicePage() {
   useEffect(() => {
     getCategories();
   }, []);
-  //End of Services Categories
+
   // Service Fields
+  const [service, setService] = useState(null);
   const [startDate, setStartDate] = useState("");
   const [expDate, setExpDate] = useState("");
   const [category, setCategory] = useState("");
@@ -49,12 +50,56 @@ export default function NewServicePage() {
   const [status, setStatus] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState(0);
+  const [client, setClient] = useState(null);
 
   function stringToFloat(str) {
     return parseFloat(str);
   }
 
-  const handleCreateNewService = async (e) => {
+  function formatDateToYYYYMMDD(dateInput) {
+    if (!dateInput) return "";
+    const date = new Date(dateInput);
+    if (isNaN(date)) return "";
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+    return `${year}-${month}-${day}`;
+  }
+
+  // Fetch service data when component mounts
+  useEffect(() => {
+    const getService = async () => {
+      try {
+        const response = await tablesDB.getRow({
+          databaseId,
+          tableId: tableServicesId,
+          rowId: id,
+        });
+        setService(response);
+      } catch (error) {
+        console.log("Error fetching service to update", error.message);
+      }
+    };
+    getService();
+  }, [id]);
+
+  // Update form state when service data changes
+  useEffect(() => {
+    if (!service) return;
+
+    setStartDate(formatDateToYYYYMMDD(service.date_from));
+    setExpDate(formatDateToYYYYMMDD(service.date_to));
+    setStatus(service.status || "");
+    setDescription(service.description || "");
+    setPrice(service.price || 0);
+    setClient(service.client_id || null);
+
+    if (service.service_category_id) {
+      setCategory(service?.service_category_id);
+    }
+  }, [service]);
+
+  const handleUpdateService = async (e) => {
     e.preventDefault();
     if (!category) {
       setError("Please select a service category.");
@@ -62,39 +107,39 @@ export default function NewServicePage() {
     }
     setError("");
 
-    const futureDate = new Date(expDate).toISOString();
-    const today = new Date().toISOString();
-    if (today > futureDate) {
-      setError("Please select Date in the Future for Expiration Date.");
+    const expDateObj = new Date(expDate);
+    const today = new Date();
+    if (expDateObj <= today) {
+      setError("Please select a future date for Expiration Date.");
       return;
     }
     setError("");
 
     try {
-      await tablesDB.upsertRow({
-        databaseId: databaseId,
+      await tablesDB.updateRow({
+        databaseId,
         tableId: tableServicesId,
-        rowId: ID.unique(),
+        rowId: id,
         data: {
           date_from: startDate,
           date_to: expDate,
-          client_id: id,
+          client_id: client,
           service_category_id: category,
-          description: description,
-          status: status,
+          description,
+          status,
           price: stringToFloat(price),
         },
       });
-      router.push(`/clients/${id}`);
+      router.push(`/clients/${client}`);
     } catch (error) {
-      console.log("Error adding new Service", error.message);
+      console.log("Error updating Service", error.message);
     }
   };
 
   return (
     <div className="max-w-md mx-auto mt-8">
-      <h1 className="mb-4 text-2xl font-bold">Add Service</h1>
-      <form className="flex flex-col gap-4" onSubmit={handleCreateNewService}>
+      <h1 className="mb-4 text-2xl font-bold">Edit Service</h1>
+      <form className="flex flex-col gap-4" onSubmit={handleUpdateService}>
         <Label htmlFor="startDate">Starting Date</Label>
         <Input
           type="date"
@@ -113,14 +158,10 @@ export default function NewServicePage() {
           onChange={(e) => setExpDate(e.target.value)}
           required
         />
-        <Select
-          onValueChange={(value) => setStatus(value)}
-          defaultValue={status}
-        >
+        <Select onValueChange={setStatus} value={status}>
           <SelectTrigger>
             <SelectValue placeholder="Client Status" />
           </SelectTrigger>
-
           <SelectContent>
             <SelectItem value={"Active"}>Active</SelectItem>
             <SelectItem value={"Nonactive"}>Nonactive</SelectItem>
@@ -146,26 +187,22 @@ export default function NewServicePage() {
           <SelectTrigger>
             <SelectValue placeholder="Select a service Category" />
           </SelectTrigger>
-
           <SelectContent>
-            {categories.map((c) => {
-              return (
-                <SelectItem key={c.$id} value={c.$id}>
-                  {c.category_title}
-                </SelectItem>
-              );
-            })}
+            {categories.map((c) => (
+              <SelectItem key={c.$id} value={c.$id}>
+                {c.category_title}
+              </SelectItem>
+            ))}
           </SelectContent>
         </Select>
         {error && <p className="text-red-600 mt-1">{error}</p>}
         <Button type="submit" className="mt-4">
-          Add
+          Update
         </Button>
       </form>
       <Button
         onClick={() => router.back()}
-        type="submit"
-        className="w-full mt-4"
+        className="mt-4 w-full"
         variant={"outline"}
       >
         Back

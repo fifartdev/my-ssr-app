@@ -26,6 +26,7 @@ import {
   tableServiceCategoryId,
   tableServicesId,
 } from "@/app/lib/constants";
+import { Pencil } from "lucide-react";
 
 async function ClientPage({ params }) {
   const { id } = await params;
@@ -124,6 +125,7 @@ async function ClientPage({ params }) {
                 <TableHead>Price</TableHead>
                 <TableHead>Client Satus</TableHead>
                 <TableHead>Service Satus</TableHead>
+                <TableHead>Edit</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -142,6 +144,14 @@ async function ClientPage({ params }) {
                       {today > expired(service?.date_to)
                         ? RedDot()
                         : GreenDot()}
+                    </TableCell>
+                    <TableCell className="text-left">
+                      <Link
+                        href={`/services/${service?.$id}`}
+                        className="font-bold text-green-500 flex flex-row"
+                      >
+                        <Pencil />
+                      </Link>
                     </TableCell>
                   </TableRow>
                 );
