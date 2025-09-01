@@ -12,11 +12,17 @@ import {
 import Link from "next/link";
 import { Eye } from "lucide-react";
 import { RedDot, GreenDot } from "../elements/elements";
+import {
+  databaseId,
+  tableClientsId,
+  tableServiceCategoryId,
+  tableServicesId,
+} from "../lib/constants";
 
 export default async function ServicesPage() {
   const services = await tablesDB.listRows({
-    databaseId: process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID,
-    tableId: process.env.NEXT_PUBLIC_APPWRITE_TABLE_SERVICES,
+    databaseId: databaseId,
+    tableId: tableServicesId,
   });
 
   // Function to get the Dates
@@ -28,8 +34,8 @@ export default async function ServicesPage() {
   const getCategoryName = async (id) => {
     try {
       const result = await tablesDB.getRow({
-        databaseId: process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID,
-        tableId: process.env.NEXT_PUBLIC_APPWRITE_TABLE_SERVICES_CATEGORIES_ID,
+        databaseId: databaseId,
+        tableId: tableServiceCategoryId,
         rowId: id,
       });
       const name = result.category_title;
@@ -42,8 +48,8 @@ export default async function ServicesPage() {
   const getClientName = async (id) => {
     try {
       const result = await tablesDB.getRow({
-        databaseId: process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID,
-        tableId: process.env.NEXT_PUBLIC_APPWRITE_TABLE_CLIENTS_ID,
+        databaseId: databaseId,
+        tableId: tableClientsId,
         rowId: id,
       });
       const name = result.name;

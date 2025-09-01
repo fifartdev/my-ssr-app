@@ -11,11 +11,12 @@ import {
 } from "@/components/ui/table";
 import Link from "next/link";
 import { Search, Pencil } from "lucide-react";
+import { databaseId, tableClientsId } from "../lib/constants";
 
 export default async function ClientsPage() {
   const clients = await tablesDB.listRows({
-    databaseId: process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID,
-    tableId: process.env.NEXT_PUBLIC_APPWRITE_TABLE_CLIENTS_ID,
+    databaseId: databaseId,
+    tableId: tableClientsId,
   });
 
   return (

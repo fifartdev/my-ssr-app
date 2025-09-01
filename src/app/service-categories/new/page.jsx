@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useRouter } from "next/navigation";
 import { ID } from "appwrite";
+import { databaseId, tableServiceCategoryId } from "@/app/lib/constants";
 
 function EditServiceCategoryPage() {
   const router = useRouter();
@@ -15,9 +16,8 @@ function EditServiceCategoryPage() {
     const getServicesCategories = async () => {
       try {
         const result = await tablesDB.listRows({
-          databaseId: process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID,
-          tableId:
-            process.env.NEXT_PUBLIC_APPWRITE_TABLE_SERVICES_CATEGORIES_ID,
+          databaseId: databaseId,
+          tableId: tableServiceCategoryId,
         });
         setCategories(result.rows);
       } catch (error) {
@@ -43,8 +43,8 @@ function EditServiceCategoryPage() {
     }
     try {
       await tablesDB.upsertRow({
-        databaseId: process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID,
-        tableId: process.env.NEXT_PUBLIC_APPWRITE_TABLE_SERVICES_CATEGORIES_ID,
+        databaseId: databaseId,
+        tableId: tableServiceCategoryId,
         rowId: ID.unique(),
         data: {
           category_title: title,

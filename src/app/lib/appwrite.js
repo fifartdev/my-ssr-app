@@ -2,11 +2,10 @@
 "use server";
 import { Client, Account } from "node-appwrite";
 import { cookies } from "next/headers";
+import { apiKey, endpoint, projectId } from "./constants";
 
 export async function createSessionClient() {
-  const client = new Client()
-    .setEndpoint(process.env.NEXT_PUBLIC_APPWRITE_ENDPOINT)
-    .setProject(process.env.NEXT_PUBLIC_APPWRITE_PROJECT);
+  const client = new Client().setEndpoint(endpoint).setProject(projectId);
 
   const session = (await cookies()).get("my-custom-session");
   if (!session || !session.value) {
@@ -24,9 +23,9 @@ export async function createSessionClient() {
 
 export async function createAdminClient() {
   const client = new Client()
-    .setEndpoint(process.env.NEXT_PUBLIC_APPWRITE_ENDPOINT)
-    .setProject(process.env.NEXT_PUBLIC_APPWRITE_PROJECT)
-    .setKey(process.env.NEXT_PUBLIC_APPWRITE_KEY);
+    .setEndpoint(endpoint)
+    .setProject(projectId)
+    .setKey(apiKey);
 
   return {
     get account() {

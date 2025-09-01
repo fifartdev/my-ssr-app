@@ -1,8 +1,7 @@
 import { Client, TablesDB } from "appwrite";
+import { endpoint, projectId } from "./constants";
 
-const client = new Client()
-  .setEndpoint(process.env.NEXT_PUBLIC_APPWRITE_ENDPOINT)
-  .setProject(process.env.NEXT_PUBLIC_APPWRITE_PROJECT);
+const client = new Client().setEndpoint(endpoint).setProject(projectId);
 
 const tablesDB = new TablesDB(client);
 

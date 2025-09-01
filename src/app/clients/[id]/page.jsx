@@ -20,19 +20,25 @@ import {
 } from "@/components/ui/table";
 import { Query } from "appwrite";
 import { GreenDot, RedDot } from "@/app/elements/elements";
+import {
+  databaseId,
+  tableClientsId,
+  tableServiceCategoryId,
+  tableServicesId,
+} from "@/app/lib/constants";
 
 async function ClientPage({ params }) {
   const { id } = await params;
   //Get Client
   const client = await tablesDB.getRow({
-    databaseId: process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID,
-    tableId: process.env.NEXT_PUBLIC_APPWRITE_TABLE_CLIENTS_ID,
+    databaseId: databaseId,
+    tableId: tableClientsId,
     rowId: id,
   });
   //Get Services of the Client
   const services = await tablesDB.listRows({
-    databaseId: process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID,
-    tableId: process.env.NEXT_PUBLIC_APPWRITE_TABLE_SERVICES,
+    databaseId: databaseId,
+    tableId: tableServicesId,
     queries: [Query.equal("client_id", id)],
   });
   // Function to get the Dates
@@ -44,8 +50,8 @@ async function ClientPage({ params }) {
   const getCategoryName = async (id) => {
     try {
       const result = await tablesDB.getRow({
-        databaseId: process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID,
-        tableId: process.env.NEXT_PUBLIC_APPWRITE_TABLE_SERVICES_CATEGORIES_ID,
+        databaseId: databaseId,
+        tableId: tableServiceCategoryId,
         rowId: id,
       });
       const name = result.category_title;

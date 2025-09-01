@@ -13,6 +13,11 @@ import {
 } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import {
+  databaseId,
+  tableServiceCategoryId,
+  tableServicesId,
+} from "@/app/lib/constants";
 
 export default function NewServicePage() {
   const router = useRouter();
@@ -24,8 +29,8 @@ export default function NewServicePage() {
   const getCategories = async () => {
     try {
       const result = await tablesDB.listRows({
-        databaseId: process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID,
-        tableId: process.env.NEXT_PUBLIC_APPWRITE_TABLE_SERVICES_CATEGORIES_ID,
+        databaseId: databaseId,
+        tableId: tableServiceCategoryId,
       });
       setCategories(result.rows);
     } catch (error) {
@@ -61,8 +66,8 @@ export default function NewServicePage() {
 
     try {
       await tablesDB.upsertRow({
-        databaseId: process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID,
-        tableId: process.env.NEXT_PUBLIC_APPWRITE_TABLE_SERVICES,
+        databaseId: databaseId,
+        tableId: tableServicesId,
         rowId: ID.unique(),
         data: {
           date_from: startDate,

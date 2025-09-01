@@ -14,13 +14,14 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { tablesDB } from "../lib/appwrite_client";
+import { databaseId, tableServiceCategoryId } from "../lib/constants";
 
 function AlertDialogBox({ id }) {
   async function deleteCategory(id) {
     try {
       await tablesDB.deleteRow({
-        databaseId: process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID,
-        tableId: process.env.NEXT_PUBLIC_APPWRITE_TABLE_SERVICES_CATEGORIES_ID,
+        databaseId: databaseId,
+        tableId: tableServiceCategoryId,
         rowId: id,
       });
     } catch (error) {

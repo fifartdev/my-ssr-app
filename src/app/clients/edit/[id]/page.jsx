@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { tablesDB } from "@/app/lib/appwrite_client";
 import { useRouter, useParams } from "next/navigation";
+import { databaseId, tableClientsId } from "@/app/lib/constants";
 
 export default function NewClientPage() {
   const router = useRouter();
@@ -14,8 +15,8 @@ export default function NewClientPage() {
   const getClient = async () => {
     try {
       const client = await tablesDB.getRow({
-        databaseId: process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID,
-        tableId: process.env.NEXT_PUBLIC_APPWRITE_TABLE_CLIENTS_ID,
+        databaseId: databaseId,
+        tableId: tableClientsId,
         rowId: id,
       });
       setClient(client);
@@ -53,8 +54,8 @@ export default function NewClientPage() {
     e.preventDefault();
     try {
       await tablesDB.updateRow({
-        databaseId: process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID,
-        tableId: process.env.NEXT_PUBLIC_APPWRITE_TABLE_CLIENTS_ID,
+        databaseId: databaseId,
+        tableId: tableClientsId,
         rowId: id,
         data: { name, surname, email, landline, mobile, address },
       });

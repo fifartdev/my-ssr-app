@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { ID } from "appwrite";
 import { tablesDB } from "@/app/lib/appwrite_client";
 import { useRouter } from "next/navigation";
+import { databaseId, tableClientsId } from "@/app/lib/constants";
 
 export default function NewClientPage() {
   const router = useRouter();
@@ -20,8 +21,8 @@ export default function NewClientPage() {
     e.preventDefault();
     try {
       await tablesDB.upsertRow({
-        databaseId: process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID,
-        tableId: process.env.NEXT_PUBLIC_APPWRITE_TABLE_CLIENTS_ID,
+        databaseId: databaseId,
+        tableId: tableClientsId,
         rowId: ID.unique(),
         data: { name, surname, email, landline, mobile, address },
       });

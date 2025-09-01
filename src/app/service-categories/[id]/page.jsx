@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useParams, useRouter } from "next/navigation";
+import { databaseId, tableServiceCategoryId } from "@/app/lib/constants";
 
 function EditServiceCategoryPage() {
   const { id } = useParams();
@@ -15,9 +16,8 @@ function EditServiceCategoryPage() {
     const getCategory = async () => {
       try {
         const result = await tablesDB.getRow({
-          databaseId: process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID,
-          tableId:
-            process.env.NEXT_PUBLIC_APPWRITE_TABLE_SERVICES_CATEGORIES_ID,
+          databaseId: databaseId,
+          tableId: tableServiceCategoryId,
           rowId: id,
         });
         setCategory(result);

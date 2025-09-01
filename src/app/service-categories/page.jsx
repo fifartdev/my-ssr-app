@@ -12,11 +12,12 @@ import Link from "next/link";
 import { tablesDB } from "../lib/appwrite_client";
 import { Pencil } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { databaseId, tableServiceCategoryId } from "../lib/constants";
 
 async function ServiceCategoriesPage() {
   const response = await tablesDB.listRows({
-    databaseId: process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID,
-    tableId: process.env.NEXT_PUBLIC_APPWRITE_TABLE_SERVICES_CATEGORIES_ID,
+    databaseId: databaseId,
+    tableId: tableServiceCategoryId,
   });
 
   if (!response) {
