@@ -1,13 +1,35 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { ID } from "appwrite";
 import { tablesDB } from "@/app/lib/appwrite_client";
-import { useRouter } from "next/navigation";
+import { useRouter, useParams } from "next/navigation";
 
 export default function NewClientPage() {
   const router = useRouter();
+  const { id } = useParams();
+  const [client, setClient] = useState({});
+
+  //Get Current Client
+  const getClient = async () => {
+    try {
+      const client = await tablesDB.getRow({
+        databaseId: process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID,
+        tableId: process.env.NEXT_PUBLIC_APPWRITE_TABLE_CLIENTS_ID,
+        rowId: id,
+      });
+      setClient(client);
+    } catch (error) {
+      console.log(
+        "Failing fetching current client for update its data: ",
+        error.message
+      );
+    }
+  };
+
+  useEffect(() => {
+    getClient();
+  }, [id]);
 
   const [name, setName] = useState("");
   const [surname, setSurname] = useState("");
@@ -16,13 +38,24 @@ export default function NewClientPage() {
   const [mobile, setMobile] = useState("");
   const [address, setAddress] = useState("");
 
+  useEffect(() => {
+    if (client) {
+      setName(client.name || "");
+      setSurname(client.surname || "");
+      setEmail(client.email || "");
+      setLandline(client.landline || "");
+      setMobile(client.mobile || "");
+      setAddress(client.address || "");
+    }
+  }, [client]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await tablesDB.upsertRow({
+      await tablesDB.updateRow({
         databaseId: process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID,
         tableId: process.env.NEXT_PUBLIC_APPWRITE_TABLE_CLIENTS_ID,
-        rowId: ID.unique(),
+        rowId: id,
         data: { name, surname, email, landline, mobile, address },
       });
 
@@ -34,7 +67,7 @@ export default function NewClientPage() {
 
   return (
     <div className="max-w-md mx-auto mt-8">
-      <h1 className="mb-4 text-2xl font-bold">New Client</h1>
+      <h1 className="mb-4 text-2xl font-bold">Update Client</h1>
       <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
         <Input
           type="text"
@@ -84,9 +117,16 @@ export default function NewClientPage() {
           onChange={(e) => setAddress(e.target.value)}
         />
         <Button type="submit" className="mt-4">
-          Create Client
+          Update Client
         </Button>
       </form>
+      <Button
+        onClick={() => router.back()}
+        className="mt-1 w-full"
+        variant={"outline"}
+      >
+        Back
+      </Button>
     </div>
   );
 }
