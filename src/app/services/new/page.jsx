@@ -47,6 +47,12 @@ export default function NewServicePage() {
   const [category, setCategory] = useState("");
   const [error, setError] = useState("");
   const [status, setStatus] = useState("");
+  const [description, setDescription] = useState("");
+  const [price, setPrice] = useState(0);
+
+  function stringToFloat(str) {
+    return parseFloat(str);
+  }
 
   const handleCreateNewService = async (e) => {
     e.preventDefault();
@@ -74,7 +80,9 @@ export default function NewServicePage() {
           date_to: expDate,
           client_id: id,
           service_category_id: category,
+          description: description,
           status: status,
+          price: stringToFloat(price),
         },
       });
       router.push(`/clients/${id}`);
@@ -118,6 +126,22 @@ export default function NewServicePage() {
             <SelectItem value={"Nonactive"}>Nonactive</SelectItem>
           </SelectContent>
         </Select>
+        <Input
+          type="text"
+          name="description"
+          value={description}
+          placeholder="Fill in a service description"
+          onChange={(e) => setDescription(e.target.value)}
+          required
+        />
+        <Input
+          type="number"
+          name="price"
+          value={price}
+          placeholder="€"
+          onChange={(e) => setPrice(e.target.value)}
+          required
+        />
         <Select onValueChange={(value) => setCategory(value)} value={category}>
           <SelectTrigger>
             <SelectValue placeholder="Select a service Category" />
