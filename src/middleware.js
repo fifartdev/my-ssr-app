@@ -31,5 +31,6 @@ export const config = {
     "/clients/:path*",
     "/services/:path*",
     "/service-categories/:path*",
+    "/signup",
   ],
 };

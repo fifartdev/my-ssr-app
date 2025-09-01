@@ -58,11 +58,11 @@ export default async function Login({ searchParams }) {
         />
         <Button className="w-full">Login</Button>
       </form>
-      <div className="space-y-4 max-w-sm w-full mt-4">
+      {/* <div className="space-y-4 max-w-sm w-full mt-4">
         <Button asChild className="w-full" variant="outline">
           <Link href="/signup">Don't have an account yet? Sign Up</Link>
         </Button>
-      </div>
+      </div> */}
       {error && (
         <Alert variant="default" className="absolute bottom-4">
           <AlertDescription>
