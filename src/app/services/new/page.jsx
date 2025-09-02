@@ -142,7 +142,11 @@ export default function NewServicePage() {
           onChange={(e) => setPrice(e.target.value)}
           required
         />
-        <Select onValueChange={(value) => setCategory(value)} value={category}>
+        <Select
+          onValueChange={(value) => setCategory(value)}
+          value={category}
+          disabled={categories?.length === 0}
+        >
           <SelectTrigger>
             <SelectValue placeholder="Select a service Category" />
           </SelectTrigger>

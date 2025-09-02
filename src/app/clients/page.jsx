@@ -19,6 +19,15 @@ export default async function ClientsPage() {
     tableId: tableClientsId,
   });
 
+  if (clients?.rows.length === 0) {
+    return (
+      <div className="max-w-7xl mx-auto mt-8">
+        <h1 className="mb-4 text-2xl font-bold">All Clients</h1>
+        Nothing to show here yet.
+      </div>
+    );
+  }
+
   return (
     <div className="max-w-7xl mx-auto mt-8">
       <h1 className="mb-4 text-2xl font-bold">All Clients</h1>

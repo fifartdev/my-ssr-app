@@ -63,6 +63,15 @@ export default async function ServicesPage() {
   const today = new Date();
   const expired = (date) => new Date(date);
 
+  if (services?.rows.length === 0) {
+    return (
+      <div className="max-w-7xl mx-auto mt-8">
+        <h1 className="mb-4 text-2xl font-bold">All Services </h1>
+        Nothing to show here yet!
+      </div>
+    );
+  }
+
   return (
     <div className="max-w-7xl mx-auto mt-8">
       <h1 className="mb-4 text-2xl font-bold">All Services </h1>

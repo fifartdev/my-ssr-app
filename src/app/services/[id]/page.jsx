@@ -85,8 +85,7 @@ export default function EditServicePage() {
 
   // Update form state when service data changes
   useEffect(() => {
-    if (!service) return;
-
+    if (!service || categories.length === 0) return;
     setStartDate(formatDateToYYYYMMDD(service.date_from));
     setExpDate(formatDateToYYYYMMDD(service.date_to));
     setStatus(service.status || "");
@@ -94,10 +93,13 @@ export default function EditServicePage() {
     setPrice(service.price || 0);
     setClient(service.client_id || null);
 
-    if (service.service_category_id) {
-      setCategory(service?.service_category_id);
+    if (
+      service.service_category_id &&
+      categories.some((c) => c.$id === service.service_category_id)
+    ) {
+      setCategory(service.service_category_id);
     }
-  }, [service]);
+  }, [service, categories]);
 
   const handleUpdateService = async (e) => {
     e.preventDefault();
@@ -183,7 +185,11 @@ export default function EditServicePage() {
           onChange={(e) => setPrice(e.target.value)}
           required
         />
-        <Select onValueChange={(value) => setCategory(value)} value={category}>
+        <Select
+          onValueChange={(value) => setCategory(value)}
+          value={category}
+          disabled={categories?.length === 0}
+        >
           <SelectTrigger>
             <SelectValue placeholder="Select a service Category" />
           </SelectTrigger>
